@@ -1,4 +1,4 @@
-# Chimpanzees oeh oeh ah ah
+# Chimpanzees
  Tweedejaarsproject GitHub
 
 usage: input CSV file, see example.csv
