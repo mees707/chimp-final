@@ -1,4 +1,4 @@
-# takes a csv file 'data_sorted.csv' containing SPAT messages as an input from the same folder
+# takes multiple csv files containing SPAT messages as an input from folder called input.
 # and gives 'seq_G2R_output.csv' as output file in the Output folder
 # the output file contains a ranking of every signal group of the input
 # and its performance data based on green to red predictions
@@ -7,15 +7,15 @@
 import pandas as pd
 import numpy as np
 import warnings
-import matplotlib.pyplot as plt
 from tqdm import tqdm
 import glob
 import os
-import pathlib
+
+
 warnings.filterwarnings('ignore')
 
 # get current path
-path = os.path.dirname(os.path.realpath(__file__))
+path = os.path.dirname(os.path.realpath(__file__)) + "/" + "input"
 
 print('Reading all .csv files, this can take a while...')
 
@@ -26,7 +26,7 @@ all_files = glob.glob(os.path.join(path, "*.csv"))
 df_from_each_file = (pd.read_csv(f) for f in tqdm(all_files))
 df = pd.concat(df_from_each_file, ignore_index=True)
 
-#filtering out useless data
+# filtering out useless data
 df = df[df.state != 'unavailable']
 df = df[df.state != 'caution-Conflicting-Traffic']
 
@@ -36,11 +36,13 @@ df['state_timestamp'] = pd.to_datetime(df['state_timestamp'], unit='ms')
 df['state_end_min'] = pd.to_datetime(df['state_end_min'], unit='ms')
 df['state_end_max'] = pd.to_datetime(df['state_end_max'], unit='ms')
 df['state_end_likely'] = pd.to_datetime(df['state_end_likely'], unit='ms')
+df = df.sort_values(by="state_timestamp")
+df = df.drop_duplicates()
 
-#grouping of signalgroups
+# grouping of signalgroups
 signalgroups = [d for _, d in df.groupby('id')]
 
-#resetting index
+# resetting index
 signalgroups = [d.reset_index() for d in signalgroups]
 
 
@@ -235,11 +237,11 @@ outputdf["MinAcc"] = pd.Series(minaccs)
 outputdf.insert(0, 'Score', outputdf['MSE']/outputdf['MaxAcc']/outputdf['MinAcc'])
 outputdf = outputdf.sort_values('Score')
 
-#data to csv
-folderName = 'Output'
+# data to csv
+folderName = 'output'
 if not os.path.exists(os.getcwd() + '/' + folderName):
     os.makedirs(os.getcwd() + '/' + folderName, exist_ok=True) 
 
-outputdf.to_csv('Output/R2G_output.csv')
+outputdf.to_csv('output/R2G_output.csv')
 
 print("Done")

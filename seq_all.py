@@ -1,7 +1,7 @@
-# takes a csv file 'data_sorted.csv' containing SPAT messages as an input from the same folder
-# and gives 'seq_G2R_output.csv' as output file in the output folder
-# the output file contains a ranking of every signal group of the input
-# and its performance data based on green to red predictions
+# takes multiple csv files containing SPAT messages as an input from folder called input.
+# and gives 'seq_G2R_output.csv' as output file in the output folder.
+# the output file contains a ranking of every signal group of the input.
+# and its performance data based on green to red predictions.
 
 # these libraries are necessary
 import pandas as pd
@@ -16,7 +16,7 @@ import pathlib
 warnings.filterwarnings('ignore')
 
 # get current path
-path = os.path.dirname(os.path.realpath(__file__))
+path = os.path.dirname(os.path.realpath(__file__)) + "/" + "input"
 
 print('Reading all .csv files, this can take a while...')
 
@@ -27,7 +27,7 @@ all_files = glob.glob(os.path.join(path, "*.csv"))
 df_from_each_file = (pd.read_csv(f) for f in tqdm(all_files))
 df = pd.concat(df_from_each_file, ignore_index=True)
 
-#filtering out useless data
+# filtering out useless data
 df = df[df.state != 'unavailable']
 df = df[df.state != 'caution-Conflicting-Traffic']
 
@@ -99,7 +99,7 @@ for signalgroup in tqdm(signalgroups):
     signalgroup["new_sequence"] = signalgroup["time_s"].shift(1) != signalgroup["time_s"]
     groups.append(signalgroup)
 
-#resetting index
+# resetting index
 groups = [d.reset_index() for d in groups]
 
 # adding weights to the timestamp
@@ -223,11 +223,11 @@ outputdf["NumSeq"] = pd.Series(seq)
 outputdf["MaxAcc"] = pd.Series(maxaccs)
 outputdf["MinAcc"] = pd.Series(minaccs)
 
-#data to csv
-folderName = 'Output'
+# data to csv
+folderName = 'output'
 if not os.path.exists(os.getcwd() + '/' + folderName):
     os.makedirs(os.getcwd() + '/' + folderName, exist_ok=True) 
 
-outputdf.to_csv('Output/seq_all_output.csv')
+outputdf.to_csv('output/seq_all_output.csv')
 
 print("Done")
