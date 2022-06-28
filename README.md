@@ -11,7 +11,7 @@ seq_R2G.py: sequence ranking script for red to green state transitions
 
 seq_G2R.py: sequence ranking script for green to red state transitions
 
-usage: 'input' folder with CSV files, see example.csv
+usage: 'input' folder with CSV files, see example folder
 
 output: csv file with rankings
 
