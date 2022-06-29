@@ -217,7 +217,7 @@ ranked = dict(sorted(errors.items(), key=lambda item: item[1]))
 outputdf = pd.DataFrame.from_dict(ranked, orient='index', columns=['MSE'])
 outputdf["STD diff"] = pd.Series(stds)
 outputdf["Mean diff"] = pd.Series(means)
-outputdf["Good"] = abs(outputdf["Mean diff"])+2*outputdf["STD diff"]
+outputdf["Benchmark"] = abs(outputdf["Mean diff"])+2*outputdf["STD diff"]
 outputdf["NumPred"] = pd.Series(nums)
 outputdf["NumSeq"] = pd.Series(seq)
 outputdf["MaxAcc"] = pd.Series(maxaccs)
