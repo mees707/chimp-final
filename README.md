@@ -17,3 +17,6 @@ output: csv file with rankings
 
 
 predictor.ipynb: a small example of the machine learning model we tested
+
+
+DataClustering.ipynb: A python notebook that we used to do our clustering
